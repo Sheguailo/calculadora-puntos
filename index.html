@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Calculadora de Comisiones</title>
+
+    <link
+        rel="stylesheet"
+        href="estilo.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<div class="contenedor">
+
+
+    <!-- ============================= -->
+    <!-- ENCABEZADO -->
+    <!-- ============================= -->
+
+    <header class="encabezado">
+
+        <h1>
+            Calculadora de Comisiones
+        </h1>
+
+        <p>
+            Calcula tu ganancia estimada
+        </p>
+
+    </header>
+
+
+
+    <!-- ============================= -->
+    <!-- TIPO DE PUNTO -->
+    <!-- ============================= -->
+
+    <section class="tarjeta">
+
+        <h2>
+            1. Tipo de punto
+        </h2>
+
+
+        <div class="selector-tipo">
+
+
+            <label class="opcion-tipo">
+
+                <input
+                    type="radio"
+                    name="tipoPunto"
+                    value="PDA"
+                    checked
+                    onchange="actualizarTipo()"
+                >
+
+                <span>
+                    PDA
+                </span>
+
+            </label>
+
+
+
+            <label class="opcion-tipo">
+
+                <input
+                    type="radio"
+                    name="tipoPunto"
+                    value="PDV"
+                    onchange="actualizarTipo()"
+                >
+
+                <span>
+                    PDV
+                </span>
+
+            </label>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ============================= -->
+    <!-- VENTAS -->
+    <!-- ============================= -->
+
+    <section class="tarjeta">
+
+        <h2>
+            2. Ventas realizadas
+        </h2>
+
+
+
+        <div class="campo">
+
+            <label for="gross">
+                Gross ejecutados
+            </label>
+
+            <input
+                type="number"
+                id="gross"
+                min="0"
+                step="1"
+                value="0"
+                placeholder="Ejemplo: 10"
+            >
+
+        </div>
+
+
+
+        <div class="campo">
+
+            <label for="paquetes6000">
+                Paquetes de $6.000 vendidos
+            </label>
+
+            <input
+                type="number"
+                id="paquetes6000"
+                min="0"
+                step="1"
+                value="0"
+                placeholder="Cantidad"
+            >
+
+        </div>
+
+
+
+        <div class="campo">
+
+            <label for="paquetes10000">
+                Paquetes de $10.000 vendidos
+            </label>
+
+            <input
+                type="number"
+                id="paquetes10000"
+                min="0"
+                step="1"
+                value="0"
+                placeholder="Cantidad"
+            >
+
+        </div>
+
+
+
+        <div class="separador"></div>
+
+
+
+        <h3>
+            Ofertas opacas
+        </h3>
+
+
+
+        <div class="campo">
+
+            <label for="opaca7000">
+                Oferta opaca de $7.000
+            </label>
+
+            <input
+                type="number"
+                id="opaca7000"
+                min="0"
+                step="1"
+                value="0"
+                placeholder="Cantidad"
+            >
+
+            <small>
+                Ganancia adicional: $2.000 por unidad
+            </small>
+
+        </div>
+
+
+
+        <div class="campo">
+
+            <label for="opaca12000">
+                Oferta opaca de $12.000
+            </label>
+
+            <input
+                type="number"
+                id="opaca12000"
+                min="0"
+                step="1"
+                value="0"
+                placeholder="Cantidad"
+            >
+
+            <small>
+                Ganancia adicional: $3.000 por unidad
+            </small>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ============================= -->
+    <!-- CATEGORÍA -->
+    <!-- ============================= -->
+
+    <section class="tarjeta">
+
+        <h2>
+            3. Tu categoría
+        </h2>
+
+
+        <div
+            id="categoriaResultado"
+            class="categoria-info"
+        >
+            Ingresa tus Gross para calcular
+            tu categoría.
+        </div>
+
+    </section>
+
+
+
+    <!-- ============================= -->
+    <!-- BOTÓN -->
+    <!-- ============================= -->
+
+    <section class="boton-seccion">
+
+        <button
+            onclick="calcular()"
+            class="boton-calcular"
+        >
+            CALCULAR MI GANANCIA
+        </button>
+
+    </section>
+
+
+
+    <!-- ============================= -->
+    <!-- RESULTADO -->
+    <!-- ============================= -->
+
+    <section
+        id="resultado"
+        class="tarjeta resultado"
+        style="display: none;"
+    >
+
+
+        <h2>
+            💰 Resultado estimado
+        </h2>
+
+
+
+        <div
+            id="categoriaFinal"
+            class="categoria-final"
+        >
+        </div>
+
+
+
+        <div class="resumen-principal">
+
+            <span>
+                GANANCIA TOTAL ESTIMADA
+            </span>
+
+            <strong id="totalGanancia">
+                $0
+            </strong>
+
+        </div>
+
+
+
+        <div class="separador"></div>
+
+
+
+        <h3>
+            Desglose de la ganancia
+        </h3>
+
+
+
+        <!-- BONO -->
+
+        <div class="fila-resultado">
+
+            <span id="textoBono">
+                Bono de categoría
+            </span>
+
+            <strong id="bonoCategoria">
+                $0
+            </strong>
+
+        </div>
+
+
+
+        <!-- COMISIÓN PDA -->
+
+        <div
+            class="fila-resultado"
+            id="filaComision"
+        >
+
+            <span>
+                Comisión PDA 15%
+            </span>
+
+            <strong id="comisionPaquetes">
+                $0
+            </strong>
+
+        </div>
+
+
+
+        <!-- GANANCIA CHIPS -->
+
+        <div class="fila-resultado">
+
+            <span>
+                Ganancia por venta de chips
+            </span>
+
+            <strong id="gananciaChips">
+                $0
+            </strong>
+
+        </div>
+
+
+
+        <!-- BENEFICIO PDV -->
+
+        <div
+            class="fila-resultado"
+            id="filaBeneficioPDV"
+        >
+
+            <span>
+                Beneficio adicional PDV
+            </span>
+
+            <strong id="beneficioPDV">
+                $0
+            </strong>
+
+        </div>
+
+
+
+        <!-- RECARGAS -->
+
+        <div class="fila-resultado">
+
+            <span>
+                Pago en recargas
+            </span>
+
+            <strong id="pagoRecargas">
+                $0
+            </strong>
+
+        </div>
+
+
+
+        <!-- 5.5% -->
+
+        <div class="fila-resultado">
+
+            <span>
+                Beneficio 5,5% de recargas
+            </span>
+
+            <strong id="beneficioRecarga">
+                $0
+            </strong>
+
+        </div>
+
+
+
+        <!-- OPACA 7000 -->
+
+        <div class="fila-resultado">
+
+            <span>
+                Ganancia oferta opaca $7.000
+            </span>
+
+            <strong id="gananciaOpaca7000">
+                $0
+            </strong>
+
+        </div>
+
+
+
+        <!-- OPACA 12000 -->
+
+        <div class="fila-resultado">
+
+            <span>
+                Ganancia oferta opaca $12.000
+            </span>
+
+            <strong id="gananciaOpaca12000">
+                $0
+            </strong>
+
+        </div>
+
+
+
+        <div class="separador"></div>
+
+
+
+        <!-- ============================= -->
+        <!-- DETALLE -->
+        <!-- ============================= -->
+
+        <h3>
+            Detalle de ventas
+        </h3>
+
+
+
+        <div class="fila-resultado">
+
+            <span>
+                Gross ejecutados
+            </span>
+
+            <strong id="detalleGross">
+                0
+            </strong>
+
+        </div>
+
+
+
+        <div class="fila-resultado">
+
+            <span>
+                Chips vendidos
+            </span>
+
+            <strong id="detalleChips">
+                0
+            </strong>
+
+        </div>
+
+
+
+        <div class="fila-resultado">
+
+            <span>
+                Paquetes $6.000
+            </span>
+
+            <strong id="detalle6000">
+                0
+            </strong>
+
+        </div>
+
+
+
+        <div class="fila-resultado">
+
+            <span>
+                Paquetes $10.000
+            </span>
+
+            <strong id="detalle10000">
+                0
+            </strong>
+
+        </div>
+
+
+
+        <div class="fila-resultado">
+
+            <span>
+                Oferta opaca $7.000
+            </span>
+
+            <strong id="detalleOpaca7000">
+                0
+            </strong>
+
+        </div>
+
+
+
+        <div class="fila-resultado">
+
+            <span>
+                Oferta opaca $12.000
+            </span>
+
+            <strong id="detalleOpaca12000">
+                0
+            </strong>
+
+        </div>
+
+
+
+        <!-- ============================= -->
+        <!-- NUEVO CÁLCULO -->
+        <!-- ============================= -->
+
+        <button
+            onclick="reiniciar()"
+            class="boton-reiniciar"
+        >
+            NUEVO CÁLCULO
+        </button>
+
+
+    </section>
+
+
+
+    <!-- ============================= -->
+    <!-- PIE -->
+    <!-- ============================= -->
+
+    <footer>
+
+        <p>
+            Calculadora de comisiones
+        </p>
+
+        <p>
+            Los valores son estimados según
+            las reglas configuradas.
+        </p>
+
+    </footer>
+
+
+</div>
+
+
+
+<script src="calculadora.js"></script>
+
+
+</body>
+
+</html>
